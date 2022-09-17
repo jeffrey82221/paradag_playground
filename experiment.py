@@ -1,3 +1,7 @@
+from datetime import datetime
+from paradag import MultiThreadProcessor
+from paradag import SequentialProcessor
+import time
 from paradag import SingleSelector, RandomSelector, ShuffleSelector, FullSelector
 from paradag import DAG, dag_run
 """
@@ -22,7 +26,8 @@ print(dag_run(dag, selector=FullSelector()))
 Execution Experiment
 """
 print('Execution Experiment')
-import time
+
+
 class CustomExecutor:
     def param(self, vertex):
         return vertex
@@ -39,17 +44,28 @@ class CustomExecutor:
 
     def report_finish(self, vertices_result):
         for vertex, result in vertices_result:
-            print('Finished running {0} with result: {1}'.format(vertex, result))
-from datetime import datetime
+            print(
+                'Finished running {0} with result: {1}'.format(
+                    vertex, result))
+
+
 print('Sequential:')
-from paradag import SequentialProcessor
 start = datetime.now()
-print(dag_run(dag, selector=FullSelector(), executor=CustomExecutor(), processor=SequentialProcessor()))
+print(
+    dag_run(
+        dag,
+        selector=FullSelector(),
+        executor=CustomExecutor(),
+        processor=SequentialProcessor()))
 end = datetime.now()
 print('* Sequential Execution time:', end - start)
 print('Parallel:')
-from paradag import MultiThreadProcessor
 start = datetime.now()
-print(dag_run(dag, selector=FullSelector(), executor=CustomExecutor(), processor=MultiThreadProcessor()))
+print(
+    dag_run(
+        dag,
+        selector=FullSelector(),
+        executor=CustomExecutor(),
+        processor=MultiThreadProcessor()))
 end = datetime.now()
 print('* Parallel Execution time:', end - start)
